@@ -1,10 +1,12 @@
 import { createContext, useState } from "react"
+import { useLocalStorage } from "../components/hooks/useLocalStogare"
 import { api } from "../services/api"
 
 export const AuthContext = createContext({})
 
 export function AuthProvider({ children }) {
     const [ user, setUser ] = useState({})
+    const [ dataUser, setDateUser ] = useLocalStorage("userInfo", null)
 
     const signIn = async (username, password) => {
         try {
@@ -19,6 +21,9 @@ export function AuthProvider({ children }) {
                 roles
             })
 
+            setDateUser(user)
+            console.log(dataUser)
+            // setUser(dataUser)
         } catch(error) {
             console.log("error:", error)
 
