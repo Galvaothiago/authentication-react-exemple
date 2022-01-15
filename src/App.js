@@ -5,7 +5,7 @@ import { useContext } from "react";
 
 function App() {
   const { user } = useContext(AuthContext)
-  const hasUser = user.id !== undefined
+  const hasUser = user?.id !== undefined
 
   console.log(user)
   return (
