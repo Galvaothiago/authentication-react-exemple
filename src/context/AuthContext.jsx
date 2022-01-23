@@ -12,21 +12,30 @@ export function AuthProvider({ children }) {
 
     useEffect(() =>{
         const thereTokenAndRefreshToken = !!tokenStorage && !!refreshTokenStorage
-
+        
         const handleSetUser = async () => {
             if(thereTokenAndRefreshToken) {
-                const userInfo = await api.get("/me")
-        
-                setUser({
-                    id: "test"
-                })
-                console.log(userInfo)
-                return
+                try {
+                    const userInfo = await api.get("/me")
+                    const { id, username, email, roles } = userInfo?.data
+    
+                    setUser({
+                        id,
+                        username,
+                        email,
+                        roles
+                    })
+
+                    return
+                } catch (err) {
+                    setUser(null)
+
+                }
             }
             setUser(null)
         }
 
-        return () => handleSetUser()
+        handleSetUser()
     }, [])
 
     const signIn = async (username, password) => {
@@ -45,8 +54,6 @@ export function AuthProvider({ children }) {
             setRefreshTokenStorage(refreshToken)
 
             api.defaults.headers['Authorization'] = `Bearer ${accessToken}`
-            console.log(accessToken)
-
         } catch(error) {
             console.log("error:", error)
 
